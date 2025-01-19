@@ -45,7 +45,14 @@ export class NewsSchedule {
           });
         });
 
+        const currentTime = Math.floor(Date.now() / 1000);
+
         for (const row of rows) {
+          if (row.time && currentTime - +row.time > 3600) {
+            moreNews = false;
+            break;
+          }
+
           const { rows: existingNews } = await client.query(
             'SELECT 1 FROM news WHERE id = $1 LIMIT 1',
             [row.id],
